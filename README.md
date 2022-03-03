@@ -1,7 +1,7 @@
 # AQPago Pagamentos
 
-**Contributors:** [AQBAnk](https://profiles.wordpress.org/aqbank/) 
-**Tags:** woocommerce, aqpago, payment
+**Contributors:** [AQBAnk](https://profiles.wordpress.org/aqbank/) \n
+**Tags:** woocommerce, aqpago, payment \n
 **Requires at least:** 4.7
 **Tested up to:** 5.9
 **Stable tag:** 1.0.1
