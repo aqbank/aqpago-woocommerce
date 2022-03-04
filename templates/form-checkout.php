@@ -3,7 +3,6 @@ var	amount_total = '<?php echo esc_js($cart_total); ?>';
 var totalInstallmentMax = '<?php echo esc_js($installments) ;?>';
 var flagVisa = '<img class="visa-flag" style="width:80%;" src="<?php echo esc_url( $flagVisa ) ?>" />';
 var	totalSavedCards = <?php echo esc_js($totalSavedCards); ?>;
-var	savedCards = <?php echo (is_array(json_decode($cards, true))) ? $cards : false; ?>;
 var updateMulti= false;
 
 jQuery(document).ready(function(){
@@ -42,7 +41,6 @@ jQuery(document).ready(function(){
 	});
 	
 	jQuery('#aqpago_cc_number').on('keyup keypress blur change', function(){
-		console.log( jQuery(this).val() );
 		value = jQuery(this).val().replace(/\s+/g, '');
 		var result;
 		var valCard;

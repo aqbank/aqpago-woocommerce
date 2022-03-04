@@ -59,7 +59,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		add_action( 'woocommerce_api_aqpago_webhook', array( $this, 'webhook' ) );
 		
 		add_action('woocommerce_order_status_changed', array( $this, 'woo_order_status_change_custom'), 10, 3);
-		
+
 		// Action hook to load custom JavaScript
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );	
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_styles' ) );
@@ -428,11 +428,11 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		
 		if(is_array($cards)) {
 			foreach($cards as $digits => $card){
-				$cards[$digits]['card_id'] 		= $card['id'];
-				$cards[$digits]['four_first'] 	= $card['first4_digits'];
-				$cards[$digits]['four_last']  	= $card['last4_digits'];
-				$cards[$digits]['flag']  		= strtolower($card['flag']);
-					
+				$cards[$digits]['card_id'] 		= esc_attr($card['id']);
+				$cards[$digits]['four_first'] 	= esc_attr($card['first4_digits']);
+				$cards[$digits]['four_last']  	= esc_attr($card['last4_digits']);
+				$cards[$digits]['flag']  		= esc_attr(strtolower($card['flag']));
+				
 				if(isset($card['remove']) && $card['remove']){
 					unset($cards[$digits]);
 				} 
@@ -448,7 +448,8 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			$cards = json_encode($cards);
 		}
 		
-		//$cards = 'false';$totalSavedCards = 0;
+		// var $cards -> went through strip_tags to remove html tags in line 426
+		wp_print_inline_script_tag( 'var savedCards = ' . $cards );
 		
 		if ( is_user_logged_in() ) {
 			$user_id 	= get_current_user_id(); 
@@ -490,7 +491,6 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			$aqpagoJson = json_decode($aqpagoJson, true);
 			
 		}
-
 		
 		wc_get_template(
 			'form-checkout.php', array(
@@ -499,7 +499,6 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 				'flagVisa'        		=> $flagVisa,
 				'ajaxurl'        		=> $ajaxurl,
 				'totalSavedCards'		=> $totalSavedCards,
-				'cards'        			=> $cards,
 				'multi'         		=> $this->multi,
 				'installments'         	=> $installments,
 				'aqpagoJson'         	=> $aqpagoJson,
