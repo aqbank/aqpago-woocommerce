@@ -151,13 +151,13 @@ var AQPAGO = {
 			jQuery('.aqbank_type_payment').removeClass('aqbank_payment_active');
 			jQuery('.ticket').addClass('no-border');
 			
-			if(process_erro_type == 'credit_multiple' && process_erro && process_success) {
+			if (process_erro_type == 'credit_multiple' && process_erro && process_success) {
 				jQuery('.aqbank_type_payment_li_box.credit').slideUp(1);
 				jQuery('.aqbank_type_payment_li_box.ticket').slideUp(1);
-			}
-			else {
+			} else {
 				jQuery('.credit').slideDown('100');
 				jQuery('.ticket').slideDown('100');
+				jQuery('.pix').slideDown('100');
 			}
 			
 			jQuery('.credit_multiple').slideDown('100');
@@ -166,24 +166,24 @@ var AQPAGO = {
 			jQuery('#aqbank-valor-intergal').slideUp(); 
 			jQuery('#aqbank-multi-pagamento-valor').slideUp();
 			
-			if(method == 'credit'){
+			if (method == 'credit') {
 				jQuery('.card_one').slideUp('100'); 
-			}					
-			else if(method == 'ticket'){
+			} else if (method == 'ticket') {
 				jQuery('.aqpago-box-boleto-checkout .actions-toolbar').slideUp();
 				jQuery('.aqpago-box-boleto-checkout .button-finished').slideUp();
 				jQuery('.aqbank_payment_boleto').slideUp('100'); 
-			}					
-			else if(method == 'credit_multiple'){
+			} else if (method == 'credit_multiple') {
 				jQuery('.aqbank_payment_integral').slideUp('100'); 
 				jQuery('.card_one').slideUp('100'); 
-			}
-			else if(method == 'ticket_multiple'){
+			} else if (method == 'ticket_multiple') {
+				jQuery('.aqbank_payment_integral').slideUp('100'); 
+				jQuery('.card_one').slideUp('100'); 
+			} else if (method == 'pix') {
 				jQuery('.aqbank_payment_integral').slideUp('100'); 
 				jQuery('.card_one').slideUp('100'); 
 			}
 			
-			if(add_card){
+			if (add_card) {
 				jQuery('#list-new').slideUp();
 			}
 		
@@ -192,11 +192,11 @@ var AQPAGO = {
 			
 			jQuery('#aqpago_type_payment').val();
 			
-			if(amount_total < 11) {
+			if (amount_total < 11) {
 				jQuery('.aqbank_type_payment_li_box.ticket_multiple').addClass("aqbank_disable_method"); 
 				jQuery('.aqbank_set_multi_ticket .ticket-info-tool').slideDown();
 			} 
-			if(amount_total < 10) {
+			if (amount_total < 10) {
 				jQuery('.aqbank_type_payment_li_box.ticket').addClass("aqbank_disable_method"); 
 				jQuery('.aqbank_set_ticket .ticket-info-tool').slideDown();
 			}
@@ -222,10 +222,11 @@ var AQPAGO = {
 		jQuery('.payment-method-aqbank .actions-toolbar').slideUp();
 		
 		
-		if(method != 'credit') jQuery('.credit').slideUp('100');
-		if(method != 'ticket') jQuery('.ticket').slideUp('100');
-		if(method != 'credit_multiple') jQuery('.credit_multiple').slideUp('100');
-		if(method != 'ticket_multiple') jQuery('.ticket_multiple').slideUp('100');
+		if (method != 'credit') jQuery('.credit').slideUp('100');
+		if (method != 'ticket') jQuery('.ticket').slideUp('100');
+		if (method != 'credit_multiple') jQuery('.credit_multiple').slideUp('100');
+		if (method != 'pix') jQuery('.pix').slideUp('100');
+		if (method != 'ticket_multiple') jQuery('.ticket_multiple').slideUp('100');
 		
 		jQuery('.aqbank_type_payment').addClass('aqbank_payment_active');
 		jQuery('.aqbank-arrow-right').addClass('active-arrow');
@@ -235,37 +236,33 @@ var AQPAGO = {
 		jQuery('.aqbank_custom_informations').slideDown(); 
 		
 		
-		if(add_card && method != 'ticket'){
-			if(saved_card_one && !saved_card_two){
-				if(!card_two) {
-					if(jQuery('.box-select-card-li').length <= 1) {
+		if (add_card && method != 'ticket') {
+			if (saved_card_one && !saved_card_two) {
+				if (!card_two) {
+					if (jQuery('.box-select-card-li').length <= 1) {
 
-					}
-					else {
-						if(totalSavedCards > 0) jQuery('#list-new').slideDown('100');
+					} else {
+						if (totalSavedCards > 0) jQuery('#list-new').slideDown('100');
 					}
 				}	
 			} else {			
-				if(totalSavedCards > 0) jQuery('#list-new').slideDown('100');
+				if (totalSavedCards > 0) jQuery('#list-new').slideDown('100');
 			}
 		}
 		
 		
-		if(method == 'credit'){
+		if (method == 'credit') {
 			this.setCreditMethod();
-		}
-		else if(method == 'credit_multiple'){
+		} else if (method == 'credit_multiple') {
 			this.setCreditMultipleMethod();
-		}
-		else if(method == 'ticket_multiple'){
+		} else if (method == 'ticket_multiple') {
 			this.setTicketMultipleMethod();
-		}				
-		else if(method == 'ticket'){
+		} else if (method == 'ticket') {
 			this.setTicketMethod();
 		}
 	},
 	
-	setTicketMethod: function(){
+	setTicketMethod: function() {
 		use_two_cards = false;
 		
 		jQuery('.box-select-card').slideUp();
@@ -288,21 +285,20 @@ var AQPAGO = {
 		jQuery('.aqbank-infos').slideDown();
 		
 		
-		if(jQuery('#billing_phone').length) {
+		if (jQuery('#billing_phone').length) {
 			jQuery('.phone-text').html( jQuery('#billing_phone').val() );	
 		}
-		if(jQuery('#billing_email').length) {
-			if(jQuery('#billing_email').val() != '') {
+		if (jQuery('#billing_email').length) {
+			if (jQuery('#billing_email').val() != '') {
 				jQuery('.email-text').html( jQuery('#billing_email').val() );
 			}
 		}
 		
 		/*
-		if(customer.isLoggedIn()) {
-			if(this.getPhoneInput() == 'telephone') {
+		if (customer.isLoggedIn()) {
+			if (this.getPhoneInput() == 'telephone') {
 				jQuery('.phone-text').html( quote.shippingAddress().telephone );
-			}
-			else {
+			} else {
 				jQuery('.phone-text').html( quote.shippingAddress().this.getPhoneInput() );
 			}
 			jQuery('.email-text').html( customer.customerData.email );
@@ -336,7 +332,7 @@ var AQPAGO = {
 		jQuery('#multi-actions-one-ticket').slideDown();
 		jQuery('#aqbank-valor-intergal').slideUp();
 		
-		if(amount_ticket) {
+		if (amount_ticket) {
 			
 			jQuery('#' + this.getCode() + '_cc_multiple_val_twoCard').val(
 				this.formatPrice( amount_ticket )
@@ -353,7 +349,7 @@ var AQPAGO = {
 			);
 		} 
 		
-		if(card_one) {
+		if (card_one) {
 			jQuery('.aqbank_custom_informations').slideDown('100');
 			
 			jQuery('.card-box-all').slideUp();
@@ -402,33 +398,98 @@ var AQPAGO = {
 			
 			jQuery('#two-li-form-payment').slideUp();
 			jQuery('#three-li-form-payment').slideDown();
-		}
-		else {
+			
+			var instOne = jQuery('#aqpago_one_installments').val();
+			jQuery("#aqpago_one_installments option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((amount_one / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if(install == instOne) {
+					jQuery('.description-installment-1').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					);
+					
+					jQuery('#one-card-bottom strong').html(install + 'x');
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(data.price));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
+		} else {
+			var instOne = jQuery('#aqpago_one_installments').val();
+			
+			jQuery("#aqpago_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			jQuery('.installment-view').html('');
+			
+			var valuePrice = jQuery('#aqpago_cc_multiple_val').val().replace('.', '');
+			valuePrice = valuePrice.replace(',', '.');
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((valuePrice / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if (install == jQuery('#aqpago_installments').val()) {
+					jQuery('.description-installment').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					); 
+					
+					jQuery('#one-card-bottom strong').html(install + 'x');
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(data.price));
+				}					
+				if (install == jQuery('#aqpago_installments_oneCard').val()) {
+					jQuery('.description-installment-1').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					); 
+				}			
+			});
+			
 			jQuery('#button-finished').slideUp(1);
 			jQuery('.aqbank_custom_informations').slideUp(1);
 			
 			/** existe cartão salvo **/
-			if(savedCards) {
+			if (savedCards) {
 				jQuery('.card-box-all').slideUp();
 				jQuery('.box-select-card-title').slideDown();
 				jQuery('.box-select-card').slideDown();
 				jQuery('.box-select-card-li').slideDown();
-				if(!updateMulti) jQuery('#list-new').slideDown('100');
+				if (!updateMulti) jQuery('#list-new').slideDown('100');
 			}
 		}
 		
 		
 		/** só digitou o primeiro cartão **/
-		if(card_one && !card_two){
+		if (card_one && !card_two) {
 			jQuery('.box-select-card').slideDown();
 			jQuery('#three-li-form-payment').slideDown('100');
 		}
 		
 		/** dois cartões digitados **/
-		if(card_one && card_two) {
+		if (card_one && card_two) {
 			/** cartão já foi selecionado **/
-			if(select_card) {
-				
+			if (select_card) {
 				/******* select com dois cartões ********/
 				jQuery('#one-li-form-payment').slideUp(1);
 				jQuery('.box-select-card-li').slideUp(1);
@@ -442,13 +503,12 @@ var AQPAGO = {
 				jQuery('#one-li-form-payment').slideDown('100');
 				/* jQuery('#button-finished').slideDown('100'); */
 				
-				if(totalSavedCards > 1) {
+				if (totalSavedCards > 1) {
 					jQuery('#list-' + card_one).slideDown('100');
 					jQuery('.box-select-card-custom').slideDown('100');
 				}
-			}
-			else {
-				if(card_one_success){
+			} else {
+				if (card_one_success) {
 					jQuery('#one-li-form-payment').slideUp(1);
 					jQuery('.box-select-card-li').slideUp(1);
 					jQuery('.box-select-card-title').slideUp(1);
@@ -457,19 +517,17 @@ var AQPAGO = {
 					jQuery('.box-select-card').slideUp(1);
 					/***************/
 					
-					if(totalSavedCards > 1) {
+					if (totalSavedCards > 1) {
 						jQuery('#list-' + card_one).slideUp(1);
 						jQuery('.box-select-card-custom').slideUp(1);
-					}
-					else {
+					} else {
 						jQuery('#list-' + card_one ).slideDown('100');
 					}
 					jQuery('#one-li-form-payment').slideDown('100');
 					
 				
 
-				}
-				else if(card_two_success){
+				} else if (card_two_success) {
 					jQuery('#one-li-form-payment').slideUp(1);
 					jQuery('.box-select-card-li').slideUp(1);
 					jQuery('.box-select-card-title').slideUp(1);
@@ -478,18 +536,15 @@ var AQPAGO = {
 					jQuery('.box-select-card').slideUp(1);
 					/***************/
 					
-					if(totalSavedCards > 1) {
+					if (totalSavedCards > 1) {
 						jQuery('#list-' + card_two).slideUp(1);
 						jQuery('.box-select-card-custom').slideUp(1);
-					}
-					else {
+					} else {
 						jQuery('#list-' + card_two ).slideDown('100');
 					}
 					
 					jQuery('#one-li-form-payment').slideDown('100');
-				}
-				else {	
-					
+				} else {
 					/** cartão ainda não selecionado **/
 					jQuery('#one-li-form-payment').slideUp(1);
 					jQuery('#two-li-form-payment').slideUp(1);
@@ -506,20 +561,19 @@ var AQPAGO = {
 		
 		
 		/** existe 1 cartão aprovado **/
-		if(card_one_erro || card_two_erro){
+		if (card_one_erro || card_two_erro) {
 			jQuery('.box-select-card-title').slideUp();
 			jQuery('.box-select-card-custom').slideUp();
 			
 			jQuery('.aqbank_custom_informations').slideDown('100');
 			
 			//card-view-address
-			if(!card_one_erro){
-
+			if (!card_one_erro) {
 				jQuery('#one-li-form-payment').slideDown();
 				/* jQuery('#button-finished').slideDown(); */
 			}
 			
-			if(!card_two_erro){
+			if (!card_two_erro) {
 				jQuery('#two-li-form-payment').slideDown();
 				/* jQuery('#button-finished').slideDown(); */
 			}						
@@ -527,11 +581,9 @@ var AQPAGO = {
 
 
 		/** Cartão salvo selecionado **/
-		if(saved_card_one || select_card) {
-			
+		if (saved_card_one || select_card) {
 			/** Não digitou o código de segurança **/
-			if(!cards[ card_one ].securityCode) {
-				
+			if (!cards[ card_one ].securityCode) {
 				select_card = false;
 				card_one = false;
 			
@@ -544,7 +596,7 @@ var AQPAGO = {
 				jQuery('#button-finished').slideUp();
 				
 				jQuery('#multi-actions-one-ticket').slideDown('100');
-				if(!updateMulti) jQuery('#list-new').slideDown('100');
+				if (!updateMulti) jQuery('#list-new').slideDown('100');
 				jQuery('.box-select-card-title').slideDown('100');
 				jQuery('.box-select-card').slideDown('100');
 				jQuery('.box-select-card-li').slideDown('100');
@@ -554,12 +606,11 @@ var AQPAGO = {
 
 		
 	
-		if(card_one_success || card_two_success) {
-			if(card_one_success) {
+		if (card_one_success || card_two_success) {
+			if (card_one_success) {
 				jQuery('#one-li-form-payment').slideDown();
 				jQuery('#two-li-form-payment').slideUp();
-			}
-			else if(card_two_success) {
+			} else if (card_two_success) {
 				jQuery('#two-li-form-payment').slideDown();
 				jQuery('#one-li-form-payment').slideUp();
 			}
@@ -587,19 +638,52 @@ var AQPAGO = {
 		jQuery('.payment-method-content-cc').slideDown();
 		
 		/** Não digitou ou escolheu os dois cartões **/
-		if(!card_two) {
+		if (!card_two) {
 			jQuery('#multi-actions').slideUp();
 			jQuery('#button-finished').slideUp();
 			jQuery('.card-box-all').slideDown('100');
 		} 
-
+		
 		/** primeiro cartão negativo **/
-		if(!card_one) {
+		if (!card_one) {
+			jQuery("#aqpago_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			jQuery('.installment-view').html('');
+			
+			var valuePrice = jQuery('#aqpago_cc_multiple_val').val().replace('.', '');
+			valuePrice = valuePrice.replace(',', '.');
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((valuePrice / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if (install == jQuery('#aqpago_installments').val()) {
+					jQuery('.description-installment').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					); 
+				}					
+				if (install == jQuery('#aqpago_installments_oneCard').val()) {
+					jQuery('.description-installment-1').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					); 
+				}			
+			});
+			
 			jQuery('#multi-actions').slideDown();
 		}
 
 		/** primeiro cartão ok **/
-		if(card_one) {
+		if (card_one) {
 			jQuery('#' + this.getCode() + '_cc_multiple_val_oneCard').val(
 				this.formatPrice( amount_one )
 			);
@@ -614,12 +698,40 @@ var AQPAGO = {
 			);
 			
 			jQuery('#one-li-form-payment').slideDown();
-		}
-		else {
-			if(!card_two) {
-				/** existe cartão salvo **/
-				if(savedCards) {
+			
+			var instOne = jQuery('#aqpago_one_installments').val();
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((amount_one / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if(install == instOne) {
+					jQuery('.description-installment-1').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					);
 					
+					jQuery('#one-card-bottom strong').html(install + 'x');
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(data.price));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
+			
+		} else {
+			if (!card_two) {
+				/** existe cartão salvo **/
+				if (savedCards) {
 					jQuery('.one-li-form-payment').slideUp();
 					jQuery('.card-box-all').slideUp();
 					jQuery('.box-select-card-title').slideDown();
@@ -631,7 +743,7 @@ var AQPAGO = {
 		}
 
 		/** segundo cartão ok **/
-		if(card_two) {
+		if (card_two) {
 			jQuery('#' + this.getCode() + '_cc_multiple_val_twoCard').val(
 				this.formatPrice( amount_two )
 			);
@@ -645,26 +757,55 @@ var AQPAGO = {
 			);
 			
 			jQuery('#two-li-form-payment').slideDown();
+			
+			
+			var instTwo = jQuery('#aqpago_two_installments').val();
+			jQuery("#aqpago_two_installments option, #aqpago_installments_twoCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((amount_two / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if(install == instTwo) {
+					jQuery('.description-installment-2').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					);
+					
+					jQuery('#two-card-bottom strong').html(install + 'x');
+					jQuery('#two-card-bottom span').html(AQPAGO.formatPriceWithCurrency(data.price));
+				}
+			});
+			
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo).change();
 		}
 		
 		jQuery('.modal-edit-amount').slideDown();
 		jQuery('#aqbank-valor-intergal').slideUp();
 		
 		/** Show two cards for pay **/
-		if(type_payment == 'credit_multiple' && card_one && card_two) {
+		if (type_payment == 'credit_multiple' && card_one && card_two) {
 			this.showPayTwoCard();
 		}
 		
-		if(card_one && !card_two) {
+		if (card_one && !card_two) {
 			jQuery('#list-new').slideUp(1);
 			jQuery('#multi-actions-two').slideDown();
-		}
-		else if(card_one && card_two) {
+		} else if (card_one && card_two) {
 			jQuery('#list-new').slideUp(1);
 		}
 		
-		if(saved_card_one && !saved_card_two){
-			if(!card_two) {
+		if (saved_card_one && !saved_card_two) {
+			if (!card_two) {
 				jQuery('.box-select-card-li-arrow').removeClass('active-new');
 				jQuery('.box-select-card-li-arrow span').slideUp();
 				
@@ -675,12 +816,11 @@ var AQPAGO = {
 				
 				jQuery('#list-' + card_one ).slideUp();
 				
-				if(jQuery('.box-select-card-li').length <= 1) {
+				if (jQuery('.box-select-card-li').length <= 1) {
 					jQuery('#list-new').slideUp(1);
 					jQuery('.box-select-card-li').slideUp(1);
 					this.setNewCard();
-				}
-				else {
+				} else {
 					jQuery('#one-li-form-payment').slideUp(1);
 					jQuery('.box-select-card').slideDown('100');
 					jQuery('.box-select-card-title').slideDown('100');
@@ -1044,13 +1184,37 @@ var AQPAGO = {
 		jQuery('.modal-credit-amount').slideDown();
 		
 		jQuery('.aqbank-card-grand-total').html(
-			this.formatPrice( amount_total )
+			this.formatPriceWithCurrency( amount_total )
 		);
 		
-		if(card_one) {
+		
+		jQuery("#aqpago_installments option").each(function() {
+			jQuery(this).remove();
+		});
+		
+		jQuery('.installment-view').html('');
+		Object.entries(installMap).forEach(([install, data]) => {
+			var valPrice = ((amount_total / (100 - data.tax)) * 100);
+			data.price = valPrice / install;
+			data.total = valPrice;
+			
+			jQuery('#aqpago_installments').append(jQuery('<option>', {
+				value: install,
+				text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+			}));
+			
+			jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+			
+			if(install == jQuery('#aqpago_installments').val()) {
+				jQuery('.description-installment').html(
+					data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				);
+			}
+		});
+		
+		if (card_one) {
 			jQuery('#two-li-form-payment').slideUp();
 			jQuery('.card-box-all').slideUp();
-			
 			jQuery('.aqbank_payment_integral').slideDown();
 			
 			/*jQuery('#button-finished').slideDown();*/
@@ -1065,26 +1229,53 @@ var AQPAGO = {
 			
 			jQuery('#one-li-form-payment').slideDown();
 			/*jQuery('#button-finished').slideDown('100');*/
-		} 
-		else {
+			
+			var instOne = jQuery('#aqpago_one_installments').val();
+			jQuery("#aqpago_one_installments option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var valPrice = ((amount_total / (100 - data.tax)) * 100);
+				data.price = valPrice / install;
+				data.total = valPrice;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(data.price) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(data.total) + '</b></p>');
+				
+				if(install == instOne) {
+					jQuery('.description-installment-1').html(
+						data.option + ' de ' + AQPAGO.formatPriceWithCurrency(data.price) + ' ' + data.fees
+					);
+					
+					jQuery('#one-card-bottom strong').html(install + 'x');
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(data.price));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
+			
+		} else {
 			/** existe cartão salvo **/
-			if(savedCards){
+			if (savedCards) {
 				jQuery('#list-new').slideDown();
 				
 				jQuery('.card-box-all').slideUp();
 				jQuery('.box-select-card-title').slideDown();
 				jQuery('.box-select-card').slideDown();
 				jQuery('.box-select-card-li').slideDown();
-			}
-			else {
+			} else {
 				/** não tem cartão **/
 				/* jQuery('#one-action').slideDown(); */
 				jQuery('.card-box-all').slideDown();
 			}
 		}
 		
-		if(card_two) {
-			
+		if (card_two) {
 			jQuery('#two-grand-total-view').html(
 				amount_total
 			);
@@ -1094,7 +1285,7 @@ var AQPAGO = {
 			);
 			
 			/** exite cartão selecionado **/
-			if(select_card) {
+			if (select_card) {
 				/******* select com dois cartões ********/
 				jQuery('#one-li-form-payment').slideUp(1);
 				jQuery('.box-select-card-li').slideUp(1);
@@ -1108,8 +1299,7 @@ var AQPAGO = {
 				jQuery('#list-' + select_card ).slideDown('100');
 				jQuery('#one-li-form-payment').slideDown('100');
 				/*jQuery('#button-finished').slideDown('100');*/
-			}
-			else {
+			} else {
 				/******* select com dois cartões ********/
 				jQuery('#one-li-form-payment').slideUp(1);
 				jQuery('#button-finished').slideUp();
@@ -1118,17 +1308,13 @@ var AQPAGO = {
 				jQuery('.box-select-card-title').slideDown('100');
 				jQuery('.box-select-card-li').slideDown('100');
 				/***************/
-			}
-			
-			
-			
-		} 
+			}	
+		}
 		
 		/** Cartão salvo selecionado **/
-		if(saved_card_one || select_card) {
-			
+		if (saved_card_one || select_card) {
 			/** Não digitou o código de segurança **/
-			if(!cards[ card_one ].securityCode) {
+			if (!cards[ card_one ].securityCode) {
 				
 				select_card = false;
 				card_one = false;
@@ -1145,20 +1331,17 @@ var AQPAGO = {
 				jQuery('.box-select-card').slideDown('100');
 				jQuery('.box-select-card-li').slideDown('100');
 				
-			}
-			else {
-				jQuery('#list-new').slideUp();
-				
+			} else {
+				jQuery('#list-new').slideUp();				
 				jQuery('.box-select-card-li-arrow').addClass('active-new');
 				jQuery('.box-select-card-li-arrow span').slideDown();
-				
 				jQuery('.box-select-card').slideDown();
 				jQuery('#list-' + saved_card_one).slideDown();
 			}
 		}
 		
 		/** cartão selecionado da lista e lista possui mais de um cartão **/
-		if(set_one_card && totalSavedCards > 1){
+		if (set_one_card && totalSavedCards > 1) {
 			jQuery('.box-select-card-custom').slideDown();
 			jQuery('#list-'+card_one).slideDown();
 			jQuery('#list-'+card_two).slideUp(1);
@@ -1260,14 +1443,8 @@ var AQPAGO = {
 		var flag	 			= this.setPaymentFlag(ccNumber);
 		var taxvat 				= jQuery('#aqpago_documento').val().replace(/[^0-9]/g,'');
 		
-		/*
-		if(ccNumber == '' && !card_saved) {
-			return false;
-		}
-		*/
-		
 		/** Cartão Salvo **/
-		if(card_saved) {
+		if (card_saved) {
 			cardIndex 					= card_saved;
 			var card 					= [];
 			card 						= cards[cardIndex];
@@ -1284,7 +1461,7 @@ var AQPAGO = {
 			card['saved'] 				= true;
 			
 			var validCard = this.validDataCardFull(card);
-			if(validCard !== true) {
+			if (validCard !== true) {
 				toastr.error(validCard,'Atenção!', {extendedTimeOut: 2000,tapToDismiss:true});
 				return false;
 			} 
@@ -1292,7 +1469,7 @@ var AQPAGO = {
 			cards[cardIndex] 			= card;
 			flag 						= cards[cardIndex].flag;
 			
-			if(position == 'one'){
+			if (position == 'one') {
 				jQuery('#aqpago_saved_first').val( 'true' );
 				saved_card_one = card['card_id'];
 				
@@ -1311,12 +1488,11 @@ var AQPAGO = {
 				
 				
 			}
-			if(position == 'two'){
+			if (position == 'two') {
 				jQuery('#aqpago_saved_second').val( 'true' );
 				saved_card_two = card['card_id'];
 			}
-		}
-		else {
+		} else {
 			var card 					= [];
 			card['card_id'] 			= false;
 			card['installment'] 		= installments;
@@ -1339,19 +1515,19 @@ var AQPAGO = {
 			
 			cards[cardIndex] 			= card;
 			
-			if(position == 'one'){
+			if (position == 'one') {
 				jQuery('#aqpago_saved_first').val( '' );
 			}			
-			if(position == 'two'){
+			if (position == 'two') {
 				jQuery('#aqpago_saved_second').val( '' );
 			}
 		}
 		
 		/** remove erro **/
-		if(position == 'one'){
+		if (position == 'one') {
 			jQuery('#one-li-form-payment').removeClass( 'aqpago-erro' );
 		}			
-		if(position == 'two'){
+		if (position == 'two') {
 			jQuery('#two-li-form-payment').removeClass( 'aqpago-erro' );
 		}
 		
@@ -1359,7 +1535,7 @@ var AQPAGO = {
 		
 		jQuery('.card-box-all').slideUp('100');					
 		jQuery('#not_card' + this.capitalizeFirstLetter(position)).prop('checked', imOwer);
-		if(imOwer) {
+		if (imOwer) {
 			jQuery('.documento-' + position + '-card' + this.capitalizeFirstLetter(position)).slideUp('100');
 		} else {
 			jQuery('.documento-' + position + '-card'  + this.capitalizeFirstLetter(position)).slideDown('100');
@@ -1368,8 +1544,8 @@ var AQPAGO = {
 		/** Alterar quando for one e two valor **/
 		var amountOption = amount_total;
 		
-		/** Multi Crédito primeiro cartão **/
-		if(type_payment == 'credit' && position == 'one') {
+		/** Crédito primeiro cartão **/
+		if (type_payment == 'credit' && position == 'one') {
 			card_one = cardIndex;
 			amountOption = amount_total;
 			
@@ -1385,27 +1561,44 @@ var AQPAGO = {
 			);
 
 			jQuery('#' + this.getCode() + '_one_installments').val( installments );
+
+			/** ***/
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee = ((amount_total / (100 - data.tax)) * 100);
+				var vlPc = vlFee / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc) + ' ' + data.fees
+				}));
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(installments).change();
+			/** ***/	
 		}
+		
 		/** Multi Crédito primeiro cartão **/
-		if(type_payment == 'credit_multiple' && position == 'one') {
+		if (type_payment == 'credit_multiple' && position == 'one') {
 			var valOne 	= jQuery('#' + this.getCode() + '_cc_multiple_val').val();
 			valOne 		= this.customValValidate(valOne);
 			var valTwo 	= amount_total - valOne;
 			
 			/** valor do primeiro cartão maior que total - 1 **/
-			if( parseFloat( parseFloat( valOne ).toFixed(2) ) > parseFloat( parseFloat( (amount_total - 1) ).toFixed(2) ) ){
+			if (parseFloat( parseFloat( valOne ).toFixed(2) ) > parseFloat( parseFloat( (amount_total - 1) ).toFixed(2) )){
 				valOne = parseFloat( amount_total - 1 ).toFixed(2);
 				valTwo = amount_total - valOne;
 				
 				toastr.error('O valor não pode ser maior que ' + this.formatPriceWithCurrency( valOne ) ,'Atenção!', {extendedTimeOut: 3000,tapToDismiss:true});
-			}
-			else if( parseFloat(parseFloat( amount_total - 1 ).toFixed(2) ) <= parseFloat(0.00)){
+			} else if ( parseFloat(parseFloat( amount_total - 1 ).toFixed(2) ) <= parseFloat(0.00)) {
 				valOne = 1.00;
 				valTwo = amount_total - valOne;
 				
 				toastr.error('O valor deve ser maior que ' + this.formatPriceWithCurrency( '1.00' ) ,'Atenção!', {extendedTimeOut: 3000,tapToDismiss:true});
-			}
-			else if(parseFloat(valOne) < parseFloat(1.00)){
+			} else if(parseFloat(valOne) < parseFloat(1.00)) {
 				valOne = 1.00;
 				valTwo = amount_total - valOne;
 				
@@ -1420,6 +1613,44 @@ var AQPAGO = {
 			amount_ticket 	= valTwo;
 			card_one 		= cardIndex;
 			amountOption 	= amount_one;
+
+			var instOne = jQuery('#aqpago_one_installments').val();
+			var instTwo = jQuery('#aqpago_two_installments').val();
+			
+			/** ***/
+			jQuery("#aqpago_installments option, #aqpago_one_installments option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			jQuery('.installment-view').html('');
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_one / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				var vlFee2 = ((amount_two / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_installments').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(vlPc2) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(vlFee2) + '</b></p>');
+				
+				if(jQuery('#aqpago_installments').val() == install) {
+					jQuery('.description-installment, .description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne);
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo);
+			/** ***/
 			
 			jQuery('#' + this.getCode() + '_cc_number').val('').change();
 			jQuery('#' + this.getCode() + '_cc_owner').val('').change();
@@ -1436,15 +1667,15 @@ var AQPAGO = {
 				this.formatPrice( amount_one ) 
 			);			
 			
-			if(card_two) {
+			if (card_two) {
 				jQuery('#' + this.getCode() + '_cc_multiple_val_twoCard').val(
 					this.formatPrice( amount_two ) 
 				);
-
+				/*
 				jQuery('#two-card-bottom strong').html( cards[ card_two ].installment + 'x' );
 				jQuery('#two-card-bottom span').html( 
 					this.formatPriceWithCurrency( (amount_two / cards[ card_two ].installment).toFixed(2) ) 
-				);
+				); */
 			} else {
 				set_two_card = true;
 			}
@@ -1477,26 +1708,77 @@ var AQPAGO = {
 			card_two	 	= cardIndex;
 			amountOption 	= amount_two;
 			
+			
+			var instOne = jQuery('#aqpago_one_installments').val();
+			var instTwo = jQuery('#aqpago_two_installments').val();
+			
+			/** ***/
+			jQuery("#aqpago_installments option, #aqpago_one_installments option, #aqpago_installments_oneCard option, #aqpago_two_installments option, #aqpago_installments_twoCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			jQuery('.installment-view').html('');
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_one / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				if(instOne == install) {
+					jQuery('.description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees);
+					jQuery('#one-card-bottom strong').html(instOne + 'x');
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc1));
+				}
+				
+				var vlFee2 = ((amount_two / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_installments, #aqpago_two_installments, #aqpago_installments_twoCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(vlPc2) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(vlFee2) + '</b></p>');
+				
+				if(jQuery('#aqpago_installments').val() == install) {
+					jQuery('.description-installment').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+				}
+				
+				if (instTwo == install) {
+					jQuery('.description-installment-2').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+					jQuery('#two-card-bottom strong').html(instTwo + 'x');
+					jQuery('#two-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc2));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne);
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo);
+			/** ***/
+			
 			jQuery('#' + this.getCode() + '_two_installments').val( installments );
 			jQuery('#' + this.getCode() + '_cc_multiple_val_twoCard').val( 
 				this.formatPrice( amount_two )
 			);
-
+			
 			jQuery('#' + this.getCode() + '_cc_multiple_val_oneCard').val( 
 				this.formatPrice( amount_one ) 
 			);
 			
-			jQuery('#one-grand-total-view').html( 
+			jQuery('#one-grand-total-view').html(
 				this.formatPriceWithCurrency( amount_one )
 			);
 			
+			/*
 			jQuery('#one-card-bottom strong').html( cards[ card_one ].installment + 'x' );
 			jQuery('#one-card-bottom span').html( 
 				this.formatPriceWithCurrency( (amount_one / cards[ card_one ].installment ) )
-			);
-			
-			
+			); */	
 		}
+		
 		/** Multi boleto primeiro cartão **/
 		if(type_payment == 'ticket_multiple' && position == 'one') {
 			var valOne 	= jQuery('#' + this.getCode() + '_cc_multiple_val').val();
@@ -1531,17 +1813,59 @@ var AQPAGO = {
 			jQuery('#' + this.getCode() + '_cc_multiple_val_oneCard').val( 
 				this.formatPrice( amount_one ) 
 			);
+			
+			
 
+			var instOne = jQuery('#aqpago_one_installments').val();
+			var instTwo = jQuery('#aqpago_two_installments').val();
+			
+			/** ***/
+			jQuery("#aqpago_installments option, #aqpago_one_installments option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			jQuery('.installment-view').html('');
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_one / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				var vlFee2 = ((amount_two / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_installments').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(vlPc2) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(vlFee2) + '</b></p>');
+				
+				if(instOne == install) {
+					jQuery('.description-installment, .description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees);
+					jQuery('#one-card-bottom strong').html( instOne + 'x' );
+					jQuery('#one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc1));				
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne);
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo);
+			/** ***/
+			
+			/*
 			jQuery('#one-card-bottom strong').html( cards[ card_one ].installment + 'x' );
 			jQuery('#one-card-bottom span').html( 
 				this.formatPriceWithCurrency( (amount_one / cards[ card_one ].installment ).toFixed(2) ) 
-			);
-
+			); */
+		
 			jQuery('#three-card-bottom strong').html( '1x' );
 			jQuery('#three-card-bottom span').html( 
 				this.formatPriceWithCurrency( amount_ticket )
 			);
-
 		}
 		
 		/** Modal one Card **/
@@ -1559,16 +1883,17 @@ var AQPAGO = {
 		jQuery('#' + this.getCode() + '_installments_' + position + 'Card').val( card['installment'] );
 		/***********/
 		
+		/*
 		jQuery('#' + position + '-card-bottom strong').html( installments + 'x' );
 		jQuery('#' + position + '-card-bottom span').html( 
 			this.formatPriceWithCurrency( (amountOption / installments).toFixed(2) )
-		);		
+		);		*/
 		
 		jQuery('#ticket-card-bottom strong').html( '1x' );
 		jQuery('#ticket-card-bottom span').html( 
 			this.formatPriceWithCurrency( amount_ticket )
 		);
-
+		
 		jQuery('#' + position + '-middle-number-card').html( fourDigits );
 		jQuery('#' + position + '-grand-total-view').html( 
 			this.formatPriceWithCurrency( amountOption )
@@ -1634,8 +1959,7 @@ var AQPAGO = {
 			}
 			
 			jQuery('.aqban-modal-one-card').slideDown();
-		}
-		
+		}		
 	},
 	showPayTicketMulti: function(){
 		var self  = this;
@@ -1651,11 +1975,13 @@ var AQPAGO = {
 		jQuery('.card-box-all').slideUp('100');
 		
 		jQuery('#' + this.getCode() + '_one_installments').val( cards[card_one].installment );
+		
+		/*
 		jQuery('#one-card-bottom strong').html( cards[card_one].installment + 'x' );
 		jQuery('#one-card-bottom span').html( 
 			this.formatPriceWithCurrency( (amount_one / cards[card_one].installment) )
 			
-		);
+		); */
 		
 		/** Modal **/
 		jQuery('#' + this.getCode() + '_cc_multiple_val_oneCard').val( 
@@ -1711,7 +2037,7 @@ var AQPAGO = {
 		jQuery('#ticket-card-bottom span').html(
 			this.formatPriceWithCurrency( amount_ticket )
 		);
-
+		
 		/***********************************/
 		
 		jQuery('.card-box-all').slideUp('100');
@@ -2145,7 +2471,48 @@ var AQPAGO = {
 					jQuery('#two-card-bottom span').html( this.formatPriceWithCurrency( amount_two ) );
 				}
 			}
-		
+			
+			var instOne = jQuery('#aqpago_installments_oneCard').val();
+			var instTwo = jQuery('#aqpago_installments_twoCard').val();
+			
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option, #aqpago_two_installments option, #aqpago_installments_twoCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_one / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				if(instOne == install) {
+					jQuery('.description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees);
+					jQuery('.one-card-bottom strong').html(instOne + 'x');
+					jQuery('.one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc1));
+				}
+				
+				var vlFee2 = ((amount_two / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_installments, #aqpago_two_installments, #aqpago_installments_twoCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(vlPc2) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(vlFee2) + '</b></p>');
+				
+				if(instTwo == install) {
+					jQuery('.description-installment-2').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+					jQuery('.two-card-bottom strong').html(instTwo + 'x');
+					jQuery('.two-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc2));				
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo).change();
 		}
 		else {
 			var valOne = amount_total;
@@ -2165,13 +2532,34 @@ var AQPAGO = {
 				jQuery('#one-card-bottom span').html( this.formatPriceWithCurrency( amount_total ) );
 			}
 			
+			
+			var instOne = jQuery('#aqpago_installments_oneCard').val();
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_total / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				if(instOne == install) {
+					jQuery('.description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees);
+					jQuery('.one-card-bottom strong').html(instOne + 'x');
+					jQuery('.one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc1));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
 		}
 		
 		var bandeira = this.setPaymentFlag(ccNumber);
 		this.setBandeiraInfo('#one-li-form-payment .li-number-card .img-flag', bandeira, 'info');
 		
-		//card['taxvat'] 		= jQuery('#aqpago_documento_cardOne').val();
-
 		if(modal){
 			if(cards.indexOf(cardIndex) && saved_card_one) {
 				card['card_id'] = cards[cardIndex].card_id;
@@ -2186,10 +2574,6 @@ var AQPAGO = {
 		
 		cards[cardIndex] 	= card;
 		card_one 			= cardIndex;
-		
-		console.log( card_one );
-		console.log( cardIndex );
-		console.log( cards[cardIndex] );
 		
 		jQuery('#' + this.getCode() + '_one_installments').val( installments );
 		jQuery('#one-card-bottom strong').html( installments + 'x' );
@@ -2309,6 +2693,72 @@ var AQPAGO = {
 			}
 			
 			jQuery('#one-card-bottom span').html( this.formatPriceWithCurrency( (amount_one / cards[ card_one ].installment ).toFixed(2) ) );
+		
+		
+			var instOne = jQuery('#aqpago_installments_oneCard').val();
+			var instTwo = jQuery('#aqpago_installments_twoCard').val();
+			
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option, #aqpago_two_installments option, #aqpago_installments_twoCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee1 = ((amount_one / (100 - data.tax)) * 100);
+				var vlPc1 = vlFee1 / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees
+				}));
+				
+				if(instOne == install) {
+					jQuery('.description-installment-1').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc1) + ' ' + data.fees);
+					jQuery('.one-card-bottom strong').html(instOne + 'x');
+					jQuery('.one-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc1));
+				}
+				
+				var vlFee2 = ((amount_two / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_installments, #aqpago_two_installments, #aqpago_installments_twoCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				jQuery('.installment-view').append( '<p>' + data.option + ' de <b>' + AQPAGO.formatPriceWithCurrency(vlPc2) + '</b> ' + data.fees + ' - Total <b>' + AQPAGO.formatPriceWithCurrency(vlFee2) + '</b></p>');
+				
+				if(instTwo == install) {
+					jQuery('.description-installment-2').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+					jQuery('.two-card-bottom strong').html(instTwo + 'x');
+					jQuery('.two-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc2));				
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instOne).change();
+			jQuery('#aqpago_two_installments, #aqpago_installments_twoCard').val(instTwo).change();
+		} else {
+			var instTwo = jQuery('#aqpago_installments_oneCard').val();
+			jQuery("#aqpago_one_installments option, #aqpago_installments_oneCard option").each(function() {
+				jQuery(this).remove();
+			});
+			
+			Object.entries(installMap).forEach(([install, data]) => {
+				var vlFee2 = ((amount_total / (100 - data.tax)) * 100);
+				var vlPc2 = vlFee2 / install;
+				
+				jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').append(jQuery('<option>', {
+					value: install,
+					text: data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees
+				}));
+				
+				if(instTwo == install) {
+					jQuery('.description-installment-2').html(data.option + ' de ' + AQPAGO.formatPriceWithCurrency(vlPc2) + ' ' + data.fees);
+					jQuery('.two-card-bottom strong').html(instTwo + 'x');
+					jQuery('.two-card-bottom span').html(AQPAGO.formatPriceWithCurrency(vlPc2));
+				}
+			});
+			
+			jQuery('#aqpago_one_installments, #aqpago_installments_oneCard').val(instTwo).change();
 		}
 		
 		var bandeira = this.setPaymentFlag(ccNumber);

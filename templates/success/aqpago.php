@@ -144,5 +144,4 @@ jQuery(function () {
 		</div>
 	</div>
 </div>
-<br/>
-<p><strong>ID do pedido: </strong> <?php echo esc_html( $response['id'] ) ?></p>
+<br/> 

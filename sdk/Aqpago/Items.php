@@ -13,6 +13,8 @@ class Items implements AqpagoSerializable
 
     private $qty;
 
+    private $amount;
+	
     private $unit_amount;
 
     private $image;
@@ -36,6 +38,7 @@ class Items implements AqpagoSerializable
     {
         $this->name         = isset($data->name) ? $data->name : null;
         $this->qty          = isset($data->qty) ? $data->qty : null;
+        $this->amount  		= isset($data->amount) ? $data->amount : null;
         $this->unit_amount  = isset($data->unit_amount) ? $data->unit_amount : null;
         $this->image        = isset($data->image) ? $data->image : null;
         $this->link         = isset($data->link) ? $data->link : null;
@@ -78,6 +81,26 @@ class Items implements AqpagoSerializable
     public function setQty($qty)
     {
         $this->qty = $qty;
+
+        return $this;
+    }
+	
+    /**
+     * @return mixed
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+	
+    /**
+     * @param $amount
+     *
+     * @return $this
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
 
         return $this;
     }

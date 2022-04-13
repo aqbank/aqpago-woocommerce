@@ -66,7 +66,7 @@ class WC_Aqpago_Order_Info
 			
 			if(isset($response['payments'])) {
 				
-				echo esc_html("<h3>" . __( 'AQPago', 'woocommerce' ) . "</h3>");
+				echo "<h3>" . esc_html( __( 'AQPago', 'woocommerce' ) ) . "</h3>";
 				
 				foreach($response['payments'] as $k => $payment){
 					

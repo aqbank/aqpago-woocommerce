@@ -3,16 +3,16 @@
     <table>
 		<?php if($payment['type'] == 'credit'): ?>
 			<tr>
-				<td style="width: 150px;height: 30px;"><b><?php echo __( 'ID: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html( $payment['id'] ) ?> </td>
+				<td style="width: 150px;height: 30px;"><b><?php echo __( 'ID do pagamento: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html( $payment['id'] ) ?> </td>
 			</tr> 
 			<tr>
 				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Realizado: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html( date("d/m/Y", strtotime($payment['created_at'])) . ' às ' . date("H:i", strtotime($payment['created_at'])) ) ?> </td>
 			</tr> 
 			<tr>
-				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Valor: ', 'woocommerce' ) ?></b></td><td> R$ <?php echo esc_html( number_format($payment['amount'], 2, ',', '.') ) ?> </td>
+				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Valor total: ', 'woocommerce' ) ?></b></td><td> R$ <?php echo esc_html( number_format($payment['amount'], 2, ',', '.') ) ?> </td>
 			</tr> 			
 			<tr>
-				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Parcelas: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html(( $payment['installments'] ) ?>x </td>
+				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Parcelas: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html( $payment['installments'] ) ?>x </td>
 			</tr> 
 			<tr>
 				<td style="width: 150px;height: 30px;"><b><?php echo __( 'Cartão: ', 'woocommerce' ) ?></b></td><td> <?php echo esc_html( $payment['credit_card']['first4_digits'] ) . ' **** **** ' . esc_html( $payment['credit_card']['last4_digits'] ) ?> </td>

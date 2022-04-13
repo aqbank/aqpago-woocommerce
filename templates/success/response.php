@@ -317,16 +317,9 @@ var flagVisa = '<img class="visa-flag" style="width:80%;" src="<?php echo esc_ur
 		</div>
 	</div>
 </div>
-
 <div style="margin-bottom: 20px;"></div>
-
 <style>
-.entry-header .entry-title,
-.woocommerce-order-overview,
-.woocommerce-order-details__title,
-.woocommerce-table.woocommerce-table--order-details.shop_table.order_details,
-.woocommerce-customer-details,
-.woocommerce-MyAccount-content p {
+.woocommerce-customer-details .woocommerce-columns--addresses {
 	display: none !important;
 }
 </style>
