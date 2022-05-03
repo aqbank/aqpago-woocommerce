@@ -1,6 +1,6 @@
 <style>
 .payment_box.payment_method_aqpago {
-	background: <?php echo esc_attr($backgroundColor)  ?> !important';
+	background: <?php echo esc_attr($backgroundColor)  ?> !important;
 }
 .payment_box.payment_method_aqpago:before {
     border-bottom-color: <?php echo esc_attr($backgroundColor)  ?> !important';
