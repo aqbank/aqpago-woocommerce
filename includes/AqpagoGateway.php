@@ -547,7 +547,8 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		
 		$description = $this->get_description();
 		if ( $description ) {
-			echo esc_html( wpautop( wptexturize( $description ) ) );
+			$description = strip_tags($description);
+			echo esc_html( $description );
 		}
 		
 		
@@ -686,6 +687,8 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		if ($this->enable_for_methods == '') {
 			$this->enable_for_methods = array(0 => 'credit');
 		}
+
+		$backgroundColor = '#ffffff';
 		
 		wc_get_template(
 			'form-checkout.php', array(
@@ -702,6 +705,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 				'min_total_installments'=> $this->min_total_installments,
 				'field_document'		=> $this->field_document,
 				'field_phone'			=> $this->field_phone,
+				'backgroundColor'       => $backgroundColor,
 				'flags'              	=> plugins_url( 'assets/images/aqpago.png', plugin_dir_path( __FILE__ ) ),
 			), 'woocommerce/aqpago/', WC_Aqpago::get_templates_path()
 		);

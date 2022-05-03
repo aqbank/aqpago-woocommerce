@@ -1,3 +1,12 @@
+<style>
+.payment_box.payment_method_aqpago {
+	background: <?php echo esc_attr($backgroundColor)  ?> !important';
+}
+.payment_box.payment_method_aqpago:before {
+    border-bottom-color: <?php echo esc_attr($backgroundColor)  ?> !important';
+	background: <?php echo esc_attr($backgroundColor)  ?> !important';
+}
+</style>
 <script>
 var	amount_total = '<?php echo esc_js($cart_total); ?>';
 var totalInstallmentMax = '<?php echo esc_js($installments) ;?>';
