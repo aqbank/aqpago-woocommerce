@@ -5,6 +5,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 	public function __construct() {
 		$this->id = "aqpago";
 		//$this->icon = '';
+		$this->icon = apply_filters( 'woocommerce_pagseguro_icon', plugins_url( '/assets/images/visa.png', plugin_dir_path( __FILE__ ) ) );
 		$this->has_fields = true;
 		$this->method_title = __( 'AQPago', 'woocommerce' );
 		$this->method_description = __( 'Aceite cartão, 2 cartões, cartão mais boleto e boleto.', 'woocommerce' );
@@ -15,6 +16,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		
 		// Load the settings.
 		$this->init_settings();
+
 		
 		// Define user set variables.
 		$this->title     				= $this->get_option( 'title' );
@@ -23,6 +25,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		$this->multi					= $this->get_option( 'multi', 'yes' );
 		$this->document					= $this->get_option( 'document' );
 		$this->token  					= (isset($_POST['woocommerce_aqpago_token'])) ? sanitize_text_field($_POST['woocommerce_aqpago_token']) : $this->get_option( 'token' );
+		$this->public_token				= $this->get_option( 'public_token' );
 		$this->enable_for_methods  		= $this->get_option( 'enable_for_methods' );
 		$this->soft_descriptor			= $this->get_option( 'soft_descriptor' );
 		$this->method_active			= $this->get_option( 'multi' );
@@ -64,11 +67,14 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			add_action( 'admin_notices', array($this, 'aqpago_admin_notification_erro_data_set') );
 		}
 		
+
 		/** create process Webhook **/
 		if (isset($_POST['woocommerce_aqpago_token']) && sanitize_text_field($_POST['woocommerce_aqpago_token']) != '') {
+			$this->check_public_token(true);
 			$this->check_webhook();
+		} else {
+			$this->check_public_token(false);
 		}
-
 		
 		add_action('woocommerce_update_options_payment_gateways_'. $this->id, array ($this, 'process_admin_options'));
 		add_action('woocommerce_thankyou_aqpago', array($this, 'aqpago_woocommerce_tankyou'), 1 );
@@ -82,8 +88,51 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );	
 		add_action( 'admin_enqueue_scripts', array( $this, 'payment_admin_scripts' ) );	
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_styles' ) );
+
+		add_action( 'woocommerce_before_checkout_form', array( $this, 'payment_load_aqpago_session' ) );
 	}
 	
+	public function payment_load_aqpago_session() {
+		wc_get_template(
+			'session.php', array(
+				'public_token' => $this->public_token,
+			), 'woocommerce/aqpago/', WC_Aqpago::get_templates_path()
+		);
+	}
+
+	private function check_public_token($force = false) {
+		/**
+		 * verified public_token is empty
+		 */
+		if ($this->get_option( 'public_token' ) == '' || $force == true) {
+			require_once( plugin_dir_path(__DIR__) . 'sdk/Includes.php' );
+			
+			$seller_doc 	= preg_replace('/[^0-9]/', '', $this->document);
+			$seller_token 	= $this->token;
+			$sellerAqpago   = new Aqbank\Apiv2\SellerAqpago($seller_doc, $seller_token, 'modulo woocommerce');
+			
+			if ($this->environment == 'production') {
+				// Ambiente de produção
+				$environment = Aqbank\Apiv2\Aqpago\Request\AqpagoEnvironment::production();
+			} else {
+				// Ambiente de homologação
+				$environment = Aqbank\Apiv2\Aqpago\Request\AqpagoEnvironment::sandbox();
+			}
+			
+			try {
+				$public_token = (new \Aqbank\Apiv2\Aqpago\Aqpago($sellerAqpago, $environment))->getPublicToken();
+				
+				$this->update_option( 'public_token', $public_token);
+				$this->public_token = $this->get_option( 'public_token' );
+				
+			} catch (Exception $e) {
+				die( $e->getMessage() );
+				
+				return;
+			}
+		}
+	}
+
 	public function woo_order_status_change_custom($order_id, $old_status, $new_status ) {
 		
 		/** Cancel order **/
@@ -737,6 +786,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		);
 	}
 	
+
 	public function payment_styles() {
 		wp_register_style( 'aqpago-toastr', plugins_url( 'assets/css/toastr.css', plugin_dir_path( __FILE__ ) ) );
 		wp_enqueue_style( 'aqpago-toastr' );
@@ -744,8 +794,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 		wp_register_style( 'aqpago-modal-pagamentos', plugins_url( 'assets/css/jquery.modal.min.css', plugin_dir_path( __FILE__ ) ) );
 		wp_enqueue_style( 'aqpago-modal-pagamentos' );		
 		
-		
-		wp_register_style( 'aqpago-pagamentos', plugins_url( 'assets/css/aqpago.css', plugin_dir_path( __FILE__ ) ) );
+		wp_register_style( 'aqpago-pagamentos', plugins_url( 'assets/css/aqpago.css', plugin_dir_path( __FILE__ ) ), array(), '7.0.5' );
 		wp_enqueue_style( 'aqpago-pagamentos' );
 	}
 	
@@ -1611,10 +1660,11 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 						return;
 					}
 					
+					
 					// payment by ticket
 					$aqpagoOrder->getOrder()
 							->setType( $typeOrder )	
-							->ticket( number_format($aqpago_ticket_value, 2, '.', '') )
+							->ticket( number_format($aqpago_ticket_value, 2, '.', ''))
 						->setBodyInstructions( $this->body_instructions );
 				} else {
 					/** Paymento card success **/
@@ -1634,7 +1684,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 						// payment by ticket
 						$aqpagoOrder->getOrder()
 								->setType( $typeOrder )	
-								->ticket( number_format($totalTicket, 2, '.', '') )
+								->ticket( number_format($totalTicket, 2, '.', ''))
 							->setBodyInstructions( $this->body_instructions );
 					} else {
 						/** Process default **/
@@ -1743,7 +1793,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 						// payment by ticket
 						$aqpagoOrder->getOrder()
 								->setType( $typeOrder )	
-								->ticket( number_format($totalTicket, 2, '.', '') )
+								->ticket( number_format($totalTicket, 2, '.', ''))
 							->setBodyInstructions( $this->body_instructions );
 					}
 				}
@@ -1752,7 +1802,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 				// payment by ticket
 				$aqpagoOrder->getOrder()
 						->setType( $typeOrder )	
-						->ticket( number_format($orderWoocommerce->get_total(), 2, '.', '') )
+						->ticket( number_format($orderWoocommerce->get_total(), 2, '.', ''))
 					->setBodyInstructions( $this->body_instructions );
 			}
 			
@@ -1777,7 +1827,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 				$orderWoocommerce->add_order_note( __('Falha ao realizar pagamento.', 'woothemes') );
 				$orderWoocommerce->add_order_note( __( $this->trans_erros( $transaction->getMessage() ), 'woothemes') );
 				
-				$orderAq = new Aqbank\Apiv2\Aqpago\Order();
+				$orderAq = new Aqbank\Apiv2\Aqpago\Order(sanitize_text_field($_POST['aqpago_session']));
 				$orderAq->setOrderId($process['id']);
 				
 				try {
@@ -1817,6 +1867,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			$state_key 		= (get_option('woocommerce_aqpago_address_state')) ? get_option('woocommerce_aqpago_address_state') : 'billing_state';
 			
 			$first_name 	= sanitize_text_field( $_POST['billing_first_name'] );
+			$last_name 		= sanitize_text_field( $_POST['billing_last_name'] );
 			$billing_email 	= sanitize_email( $_POST['billing_email'] );
 			$document 		= sanitize_text_field( preg_replace('/[^0-9]/', '', $_POST[ $document_key ]));
 			$billing_phone	= sanitize_text_field( preg_replace('/[^0-9]/', '', $_POST[ $phone_key ]));
@@ -1995,6 +2046,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 					];
 				}
 				
+
 				$totalProduct = count($_itensArray);
 				$totalFees = $_calJurosTotalPayOne + $_calJurosTotalPayTwo;
 				$totalComp = $_totalPay - $_totalPayShipping;
@@ -2126,7 +2178,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			if ($this->debug == 'yes')  $this->log->info( 'Criar request', array( 'source' => 'aqpago-pagamentos' ) );
 			
 			// Aqbank\Apiv2\Aqpago\Order
-			$aqpagoOrder = new Aqbank\Apiv2\Aqpago\Order();
+			$aqpagoOrder = new Aqbank\Apiv2\Aqpago\Order(sanitize_text_field($_POST['aqpago_session']));
 			
 			$aqpagoOrder->setReferenceId( $order_id )
 					->setPlatform('woocommerce')
@@ -2136,6 +2188,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 			
 			$customer = $aqpagoOrder->customer();
 			$customer->setName( $first_name )
+				->setLastName($last_name)
 				->setEmail( $billing_email )
 				->setTaxDocument( $document );
 			
@@ -2849,7 +2902,7 @@ class WC_Aqpago_Gateway extends WC_Payment_Gateway
 				$orderWoocommerce->add_order_note( __( 'limite de tentativas atingido.' , 'woothemes') );
 				
 				
-				$orderAq = new Aqbank\Apiv2\Aqpago\Order();
+				$orderAq = new Aqbank\Apiv2\Aqpago\Order(sanitize_text_field($_POST['aqpago_session']));
 				$orderAq->setOrderId($process['id']);
 
 				$response = (new Aqbank\Apiv2\Aqpago\Aqpago($sellerAqpago, $environment))->cancelOrder($orderAq);

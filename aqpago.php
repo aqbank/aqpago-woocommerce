@@ -3,7 +3,7 @@
  * Plugin Name: AQPago - Pagamento para WooCommerce
  * Plugin URI: https://github.com/aqbank/aqpago-woocommerce
  * Description: Nossa solução de pagamento é a mais completa do Brasil, com a menor tarifa nas vendas por cartão de crédito, pix e boleto, e podendo contar com nosso MULTIPAGAMENTO, seu cliente pode efetuar o pagamento por dois meios, trazendo vantagens e praticidade, facilitando sua venda, nossas operações financeiras faz tudo isso acontecer, e o seu recebimento é com 1 dia útil está na conta.
- * Version: 1.2.2
+ * Version: 1.3.7
  * Author: AQPago
  * Author URI: https://www.aqpago.com.br
  * Text Domain: aqpago
@@ -24,6 +24,7 @@
  *
  * @package AQPago
  */
+
 
 defined( 'ABSPATH' ) || exit;
 

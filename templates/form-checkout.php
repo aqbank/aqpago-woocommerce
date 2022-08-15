@@ -3,10 +3,20 @@
 	background: <?php echo esc_attr($backgroundColor)  ?> !important;
 }
 .payment_box.payment_method_aqpago:before {
-    border-bottom-color: <?php echo esc_attr($backgroundColor)  ?> !important';
+    border-bottom-color: <?php echo esc_attr($backgroundColor)  ?> !important;
 	background: <?php echo esc_attr($backgroundColor)  ?> !important';
 }
+.payment_method_aqpago label img {
+	display: none !important;
+}
+.payment_method_aqpago {
+	padding: 0px !important;
+}
+.wc-aqpago-box {
+	padding: 5px;
+}
 </style>
+
 <script>
 var	amount_total = '<?php echo esc_js($cart_total); ?>';
 var totalInstallmentMax = '<?php echo esc_js($installments) ;?>';
@@ -375,6 +385,7 @@ jQuery(document).ready(function(){
 	<?php endif; ?>
 	
 	window.jQuery('#place_order').click(function() {
+
 		if (window.jQuery('#payment_method_aqpago').is(':checked')) {
 			if(type_payment) {
 				
@@ -383,8 +394,13 @@ jQuery(document).ready(function(){
 				return false;
 			}
 		}
+
+		
 		
 		if (window.jQuery('#payment_method_aqpago').val() == 'aqpago') {
+			jQuery('#aqpago_session').val( AQPAGOSECTION.getSessionID() );
+    		console.log(AQPAGOSECTION.getSessionID());
+
 			if (type_payment == 'credit' && card_saved) {
 				if (!saved_card_one) {
 					toastr.error('Você precisa finalizar o processo de preenchimento do cartão','Sem cartão adicionado!', {extendedTimeOut: 3000,tapToDismiss:true});
@@ -700,7 +716,7 @@ function saveNewDataCardTwo() {
 }
 </script>
 
-<fieldset id="wc-<?php echo esc_attr( $id ); ?>-cc-form" class="wc-credit-card-form wc-payment-form wc-aqpago-box" style="background:transparent;">
+<fieldset id="wc-<?php echo esc_attr( $id ); ?>-cc-form" class="wc-credit-card-form wc-payment-form wc-aqpago-box" style="background:transparent;padding:5px;">
 	
 	<?php do_action( 'woocommerce_credit_card_form_start', $id ); ?>
 	
@@ -1367,6 +1383,7 @@ function saveNewDataCardTwo() {
 			
 		</div>
 		<div style="display:none;">
+			<input type="hidden" name="aqpago_session" id="aqpago_session" />
 			<input type="hidden" name="aqpago_type_payment" id="aqpago_type_payment" />
 			<input type="hidden" name="aqpago_saved_first" id="aqpago_saved_first" />
 			<input type="hidden" name="aqpago_saved_second" id="aqpago_saved_second" />

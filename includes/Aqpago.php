@@ -118,7 +118,7 @@ class WC_Aqpago
 					'css'      => 'min-width: 350px;',
 					'desc_tip' => false,
 					'default' => 'billing_document',
-					'options'  => $options_fieds,
+					'options'  => $options_fieds_document,
 				),
 				
 				array(
@@ -226,6 +226,7 @@ class WC_Aqpago
 	public static function aqpago_checkout_field_process($fields, $errors)
 	{
 		//$errors->add( 'validation', 'CPF / CNPJ é obrigatório!' );
+		
 	}
 	
 	public static function aqpago_woocommerce_ddress_fields($fields)

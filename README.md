@@ -1,32 +1,29 @@
-# AQPago Pagamentos
+# README #
 
-**Contributors:** [AQBAnk](https://profiles.wordpress.org/aqbank/)
+This README would normally document whatever steps are necessary to get your application up and running.
 
-**Tags:** woocommerce, aqpago, payment
+### What is this repository for? ###
 
-**Requires at least:** 4.7
+* Quick summary
+* Version
+* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-**Tested up to:** 5.9
+### How do I get set up? ###
 
-**Stable tag:** 1.0.1
+* Summary of set up
+* Configuration
+* Dependencies
+* Database configuration
+* How to run tests
+* Deployment instructions
 
-**License:** GPLv2 or later
+### Contribution guidelines ###
 
-**License URI:** http://www.gnu.org/licenses/gpl-2.0.html
+* Writing tests
+* Code review
+* Other guidelines
 
+### Who do I talk to? ###
 
-## Integração AQPago para Woocommerce
-
-## Configurações do Plugin:
-Com o plugin instalado acesse o admin do WordPress e entre em "WooCommerce" > "Configurações" > "Pagamentos" > "AQPago"
-
-Habilite o AQPago, adicione o seu documento e o token do AQPago.
-
-Você pode conseguir um token no APP AQPAgo gestor ou em https://aqbank.app/
-
-- Ambiente: SandBox para realizar teste Produção para pamentos reais.
-- Documento: documento do lojista (CPF ou CNPJ) utilizado no crendeciamento da AQPago.
-- AQPago Token: token gerado para poder processar pagamentos, se atentar para sandbox e produção.
-- Parcelar em até: número máximo de vezes que irá permitir de parcelas.
-- Valor mínimo para parcelamento: o menor valor que uma parcela poderá ter, utilizar 0 para deixar qualquer valor.
-- Gravar Log: se ativo irá gerar log de envio e resposta do processo de pagamento em WooCommerce -> Status -> Log.
+* Repo owner or admin
+* Other community or team contact

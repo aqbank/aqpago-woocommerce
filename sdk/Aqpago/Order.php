@@ -13,6 +13,7 @@ use Aqbank\Apiv2\Aqpago\Request\Exceptions\AqpagoRequestException;
 class Order implements AqpagoSerializable
 {
     private $id;
+    private $session_id;
     private $reference_id;
     private $platform;
     private $amount;
@@ -44,8 +45,9 @@ class Order implements AqpagoSerializable
      *
      * @param null $reference_id
      */
-    public function __construct($reference_id = null)
+    public function __construct($session_id = null, $reference_id = null)
     {
+        $this->setSessionId($session_id);
         $this->setReferenceId($reference_id);
     }
 
@@ -170,13 +172,13 @@ class Order implements AqpagoSerializable
      *
      * @return creditCard
      */
-    public function creditCard($amount, $installments, $reference_id = null)
+    public function creditCard($amount, $installments, $reference_id = null, $session_id = null)
     {
         if($this->getType() == Payment::PAYMENTTYPE_TICKET) {
             throw new AqpagoRequestException('Payment for card cannot be by ticket', 400);
         }
 
-        $payment = new Payment($amount, $installments, $reference_id);
+        $payment = new Payment($amount, $installments, $reference_id, $session_id);
 
         $this->setPayments($payment);
 
@@ -190,13 +192,13 @@ class Order implements AqpagoSerializable
      *
      * @return creditCard
      */
-    public function ticket($amount)
+    public function ticket($amount, $session_id = null)
     {
         if($this->getType() == Payment::PAYMENTTYPE_CREDITCARD || $this->getType() == Payment::PAYMENTTYPE_MULTI_CRED) {
             throw new AqpagoRequestException('Payment for ticket cannot be by card', 400);
         }
 
-        $payment = new Payment($amount, 1);
+        $payment = new Payment($amount, 1, null, $session_id);
         
         $this->setPayments($payment);
 
@@ -545,6 +547,24 @@ class Order implements AqpagoSerializable
     public function setMessage($message)
     {
         $this->message = $message;
+
+        return $this;
+    }    
+    
+    /**
+     * @return mixed
+     */
+    public function getSessionId()
+    {
+        return $this->session_id;
+    }
+
+    /*
+     *
+     */
+    public function setSessionId($session_id)
+    {
+        $this->session_id = $session_id;
 
         return $this;
     }
